@@ -1,5 +1,5 @@
 import { useDispatch } from "react-redux";
-import { logoutUser } from "@/store/checkauth";
+import { resetTokenAndCredentials } from "@/store/checkauth";
 import { Button } from "../ui/button";
 import { AlignJustify, LogOut } from "lucide-react";
 import { useNavigate } from "react-router-dom";
@@ -11,11 +11,13 @@ function AdminHeader({ setOpen }) {
   const { toast } = useToast();
 
   async function handleLogout() {
-    await dispatch(logoutUser());
+    dispatch(resetTokenAndCredentials());
+    sessionStorage.clear();
+    navigate("/auth/login");
     toast({
       title: "Admin logged out successfully",
     });
-    navigate("/auth/login");
+    
   }
 
   return (
