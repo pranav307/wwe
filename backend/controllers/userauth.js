@@ -2,47 +2,33 @@ import { User } from "../model/user.models.js";
 import bcrypt from "bcryptjs"
 import jwt from "jsonwebtoken";
 
-const registerUser = async(req,res)=>{
-    // get user details from frontend
-    // validation - not empty
-    // check if user already exists: username, email
-    // check for images, check for avatar
-    // upload them to cloudinary, avatar
-    // create user object - create entry in db
-    // remove password and refresh token field from response
-    // check for user creation
-    // return res
-    const {username,email,fullName,password}=req.body;
-    try {
-        const checkUser =await User.findOne({email});
-        if(checkUser){
-            return res.json({
-                success: false,
-                message: "User Already exists with the same email! Please try again",
-            });
-            
-        }
-        const hashPassword =await bcrypt.hash(password,12);
-        const newUser=new User({
-            username,
-            email,
-            fullName,
-            password:hashPassword
-        });
-        await newUser.save();
-        res.status(200).json({
-            success: true,
-            message: "Registration successful",
-          });
-    } catch (error) {
-        console.log(e);
+const registerUser = async (req, res) => {
+  console.log("Incoming Request Body:", req.body); // Log request body to debug
+  const { username, email, fullName, password } = req.body;
+
+  if (!username || !email || !fullName || !password) {
+    return res.status(400).json({
+      success: false,
+      message: "All fields are required: username, email, fullName, and password.",
+    });
+  }
+
+  try {
+    const user = new User({ username, email, fullName, password });
+    await user.save();
+    res.status(201).json({
+      success: true,
+      message: "User registered successfully!",
+    });
+  } catch (err) {
+    console.error("Error:", err);
     res.status(500).json({
       success: false,
-      message: "Some error occured",
+      message: "An error occurred during registration.",
+      error: err.message,
     });
-    }
-}
-
+  }
+};
 const loginUser=async(req,res)=>{
     const {email,password}=req.body;
     try {
