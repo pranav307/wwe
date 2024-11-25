@@ -1,4 +1,4 @@
 {
     "git.decorations.enabled": true,
-    "git.enabled": false
+    "git.enabled": true
 }
