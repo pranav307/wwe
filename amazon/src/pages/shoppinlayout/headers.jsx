@@ -75,9 +75,11 @@ function HeaderRightContent() {
   const { toast } = useToast();
 
   function handleLogout() {
-    dispatch(logoutUser());
-    toast({ title: "Logged out successfully" });
+    dispatch(resetTokenAndCredentials());
+    sessionStorage.clear();
     navigate("/shopping/home");
+    toast({ title: "Logged out successfully" });
+    
   }
 
   useEffect(() => {
