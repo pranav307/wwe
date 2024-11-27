@@ -32,10 +32,15 @@ function App() {
   );
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    const token =JSON.parse(sessionStorage.getItem('token'))
+useEffect(() => {
+  const storedToken = sessionStorage.getItem('token');
+  const token = storedToken ? JSON.parse(storedToken) : null;
+  if (token) {
     dispatch(checkAuth(token));
-  }, [dispatch]);
+  } else {
+    console.warn("No token found in session storage");
+  }
+}, [dispatch]);
 
   if (isLoading) return <Skeleton className="w-[800px] bg-black h-[600px]" />;
 
